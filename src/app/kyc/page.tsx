@@ -13,10 +13,6 @@ export default function KycPage() {
   const [status, setStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchLatestSession();
-  }, []);
-
   const fetchLatestSession = async () => {
     try {
       const sessions = await listKycSessions();
@@ -28,6 +24,10 @@ export default function KycPage() {
       console.error('Failed to fetch KYC sessions', error);
     }
   };
+
+  useEffect(() => {
+    fetchLatestSession();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
