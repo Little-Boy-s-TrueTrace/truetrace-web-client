@@ -16,32 +16,24 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "TrueTrace Bank — TrueTrace | AI-Native Cyber Defense for Banking",
+    default: "TrueTrace Bank | Deepfake & AML Compliance",
     template: "%s | TrueTrace — TrueTrace Bank",
   },
   description:
-    "TrueTrace Bank is the secure digital banking platform built by TrueTrace — an AI-native cyber defense product by Little Boy's. Winner of 1st Place at AABW 2026 (Shinhan Bank Future Lab track). Features SOAR-powered SOC, MITRE ATT&CK correlation, and zero-trust architecture for modern financial services.",
+    "Customer banking portal protected by TrueTrace multi-agent deepfake KYC, money-trail analysis, and human-reviewed AML reporting.",
   keywords: [
     "Little Boy's",
     "TrueTrace",
     "TrueTrace Bank",
-    "AI cybersecurity",
-    "SOAR platform",
-    "banking security",
-    "SOC dashboard",
-    "MITRE ATT&CK",
-    "zero trust banking",
-    "AABW 2026",
-    "Shinhan Bank Future Lab",
-    "intrusion detection",
-    "incident response",
-    "policy as code",
-    "agentic AI security",
-    "sustainable finance",
+    "deepfake KYC",
+    "anti-money laundering",
+    "mule account detection",
+    "suspicious transaction report",
+    "multi-agent compliance",
     "Vietnam fintech",
   ],
   authors: [
-    { name: "Little Boy's", url: "https://github.com/Little-Boy-s-Aegis" },
+    { name: "Little Boy's", url: "https://github.com/Little-Boy-s-TrueTrace" },
   ],
   creator: "Little Boy's",
   publisher: "TrueTrace",
@@ -59,24 +51,24 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://github.com/Little-Boy-s-Aegis",
+    url: "https://github.com/Little-Boy-s-TrueTrace/truetrace",
     siteName: "TrueTrace — TrueTrace Bank",
-    title: "TrueTrace Bank — TrueTrace | AI-Native Cyber Defense for Banking",
+    title: "TrueTrace Bank | Deepfake & AML Compliance",
     description:
-      "TrueTrace Bank by TrueTrace — an enterprise-grade AI-native SOC platform for banking cybersecurity. Built by Little Boy's. 1st Place Winner at AABW 2026.",
+      "Multi-agent banking compliance for deepfake KYC, money-trail detection, and human-reviewed STR drafts.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "TrueTrace Bank — TrueTrace | AI-Native Cyber Defense",
+    title: "TrueTrace Bank | Deepfake & AML Compliance",
     description:
-      "TrueTrace is an AI-native cyber defense platform for modern banking by Little Boy's. SOAR-powered SOC, MITRE ATT&CK, zero-trust architecture.",
+      "TrueTrace coordinates deepfake inspection, transaction-graph analysis, and AML report drafting.",
     creator: "@truetrace",
   },
-  metadataBase: new URL("https://github.com/Little-Boy-s-Aegis"),
+  metadataBase: new URL("https://github.com/Little-Boy-s-TrueTrace/truetrace"),
   alternates: {
-    canonical: "https://github.com/Little-Boy-s-Aegis",
+    canonical: "https://github.com/Little-Boy-s-TrueTrace/truetrace",
   },
-  category: "Cybersecurity",
+  category: "Financial Compliance",
   other: {
     "application-name": "TrueTrace Bank by Little Boy's",
     "apple-mobile-web-app-title": "TrueTrace",
@@ -91,15 +83,14 @@ const jsonLd = {
   applicationCategory: "SecurityApplication",
   operatingSystem: "Web",
   description:
-    "TrueTrace is an AI-native cyber defense platform developed and owned by Little Boy's. It provides enterprise-grade SOAR-powered SOC capabilities for modern banking, featuring MITRE ATT&CK correlation, zero-trust architecture, and agentic AI security agents.",
+    "TrueTrace is a multi-agent deepfake KYC and AML decision-support platform for banks, with transaction graph analysis and human-reviewed STR drafting.",
   author: {
     "@type": "Organization",
     name: "Little Boy's",
-    url: "https://github.com/Little-Boy-s-Aegis",
+    url: "https://github.com/Little-Boy-s-TrueTrace",
   },
-  award: "1st Place — Shinhan Bank Future Lab Track — Agentic AI Build Week 2026",
   keywords:
-    "Little Boy's, TrueTrace, TrueTrace Bank, cybersecurity, SOAR, SOC, banking security, MITRE ATT&CK, agentic AI",
+    "Little Boy's, TrueTrace, deepfake KYC, AML, mule accounts, STR, agentic AI",
 };
 
 export default function RootLayout({

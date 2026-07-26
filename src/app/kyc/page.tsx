@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import { createKycSession, listKycSessions } from '@/api/kyc';
 
 export default function KycPage() {
+  const [customerName, setCustomerName] = useState('');
   const [cccdNumber, setCccdNumber] = useState('');
   const [selfie, setSelfie] = useState<File | null>(null);
   const [cccdFront, setCccdFront] = useState<File | null>(null);
@@ -31,17 +32,18 @@ export default function KycPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selfie || !cccdFront || !cccdBack || !cccdNumber) {
+    if (!selfie || !cccdFront || !cccdBack || !cccdNumber || !customerName) {
       alert('Please fill all fields and upload all images.');
       return;
     }
 
     setLoading(true);
     const formData = new FormData();
+    formData.append('customerName', customerName);
     formData.append('cccdNumber', cccdNumber);
     formData.append('selfie', selfie);
-    formData.append('cccdFront', cccdFront);
-    formData.append('cccdBack', cccdBack);
+    formData.append('idFront', cccdFront);
+    formData.append('idBack', cccdBack);
 
     try {
       await createKycSession(formData);
@@ -75,6 +77,17 @@ export default function KycPage() {
             )}
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Full name</label>
+                <input
+                  type="text"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#228B22] focus:border-transparent outline-none"
+                  placeholder="Enter the name printed on your CCCD"
+                  required
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">CCCD Number</label>
                 <input
