@@ -23,7 +23,7 @@ jobs:
         node-version: '22'
         
     - name: Install Dependencies
-      run: npm install
+      run: npm ci
 
     - name: Run ESLint
       run: npm run lint --if-present
@@ -57,22 +57,25 @@ jobs:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-    - name: Build and Push Docker Image
-      uses: docker/build-push-action@v6
-      with:
-        context: .
-        push: ${{ env.DOCKER_USER != '' && github.ref == 'refs/heads/main' && github.event_name == 'push' }}
-        tags: |
-          ${{ secrets.DOCKER_HUB_USERNAME }}/truetrace-web-client:latest
-          ${{ secrets.DOCKER_HUB_USERNAME }}/truetrace-web-client:${{ github.sha }}
+    - name: Build Docker Image for Audit
+      run: docker build --tag truetrace-web-client:ci .
 
     - name: Run Trivy Vulnerability Scanner
-      continue-on-error: true
       uses: aquasecurity/trivy-action@master
       with:
-        image-ref: '${{ secrets.DOCKER_HUB_USERNAME }}/truetrace-web-client:${{ github.sha }}'
+        image-ref: 'truetrace-web-client:ci'
         format: 'table'
         exit-code: '1'
         ignore-unfixed: true
         vuln-type: 'os,library'
         severity: 'CRITICAL,HIGH'
+
+    - name: Push Docker Image
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push' && env.DOCKER_USER != ''
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+        tags: |
+          ${{ secrets.DOCKER_HUB_USERNAME }}/truetrace-web-client:latest
+          ${{ secrets.DOCKER_HUB_USERNAME }}/truetrace-web-client:${{ github.sha }}
