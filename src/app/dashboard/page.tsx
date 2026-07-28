@@ -149,7 +149,7 @@ export default function Dashboard() {
                     className="p-4 rounded-2xl bg-emerald-50/20 hover:bg-emerald-50/50 border border-emerald-100 text-center transition-all group"
                   >
                     <div className="w-8 h-8 rounded-xl bg-[#228B22] flex items-center justify-center text-white mx-auto mb-2 shadow-sm group-hover:scale-110 transition-transform font-bold">
-                      ➔
+                      -&gt;
                     </div>
                     <span className="text-xs font-bold text-[#1B4332] tracking-wide">Transfer</span>
                   </Link>
@@ -159,7 +159,7 @@ export default function Dashboard() {
                     className="p-4 rounded-2xl bg-slate-50 hover:bg-slate-100 border border-[#E5E7EB] text-center transition-all group"
                   >
                     <div className="w-8 h-8 rounded-xl bg-[#52796F] flex items-center justify-center text-white mx-auto mb-2 group-hover:scale-110 transition-transform font-bold">
-                      ☰
+                      :::
                     </div>
                     <span className="text-xs font-bold text-[#1B4332] tracking-wide">History</span>
                   </Link>
