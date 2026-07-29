@@ -12,7 +12,7 @@ function validateTransferForm(
   // 1. Account format validation
   const accRegex = /^ACC-\d{6}$/;
   if (!accRegex.test(targetTrimmed)) {
-    return { error: 'Recipient account number must be in ACC-XXXXXX format (e.g., ACC-123456).' };
+    return { error: 'Recipient account number must use the ACC-XXXXXX format.' };
   }
 
   if (sourceTrimmed === targetTrimmed) {
@@ -42,7 +42,7 @@ describe('Next.js Web Client Transfer Form Validation & Sanitization Tests', () 
   
   test('should fail if recipient account format is incorrect', () => {
     const result = validateTransferForm('ACC-111111', 'INVALID-ACC', '500.0', 'Payment');
-    expect(result.error).toBe('Recipient account number must be in ACC-XXXXXX format (e.g., ACC-123456).');
+    expect(result.error).toBe('Recipient account number must use the ACC-XXXXXX format.');
   });
 
   test('should fail if source and recipient accounts are identical', () => {

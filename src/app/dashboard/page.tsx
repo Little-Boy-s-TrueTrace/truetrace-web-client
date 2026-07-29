@@ -45,9 +45,25 @@ export default function Dashboard() {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
   };
 
-  // Spending SVG chart points
-  const points = "20,90 80,60 140,80 200,40 260,70 320,30 380,50";
-  const gradientPoints = "20,90 80,60 140,80 200,40 260,70 320,30 380,50 380,120 20,120";
+  const now = new Date();
+  const spendingByDay = new Array(7).fill(0) as number[];
+  (txHistory || []).forEach((tx) => {
+    if (tx.sourceAccountNumber !== user.accountNumber) return;
+    const txDate = new Date(tx.timestamp);
+    const age = Math.floor((now.getTime() - txDate.getTime()) / 86_400_000);
+    if (age >= 0 && age < 7) spendingByDay[6 - age] += tx.amount;
+  });
+  const weeklySpending = spendingByDay.reduce((sum, value) => sum + value, 0);
+  const maxSpending = Math.max(...spendingByDay, 1);
+  const chartPoints = spendingByDay
+    .map((value, index) => `${20 + index * 60},${105 - (value / maxSpending) * 80}`)
+    .join(' ');
+  const gradientPoints = `${chartPoints} 380,120 20,120`;
+  const dayLabels = spendingByDay.map((_, index) => {
+    const date = new Date(now);
+    date.setDate(now.getDate() - (6 - index));
+    return date.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+  });
 
   return (
     <div className="flex min-h-screen bg-[#FAFAF5] text-black font-sans">
@@ -106,31 +122,31 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                {/* Card 2: Savings Account */}
+                {/* Card 2: Account profile from the API */}
                 <div className="rounded-3xl p-6 flex flex-col justify-between min-h-[200px] bg-white border border-[#E5E7EB] hover-scale shadow-sm">
                   <div className="flex justify-between items-start">
                     <div>
-                      <p className="text-[9px] text-[#52796F] font-mono tracking-widest uppercase font-bold">Savings Accumulation</p>
+                      <p className="text-[9px] text-[#52796F] font-mono tracking-widest uppercase font-bold">Account Profile</p>
                       <h4 className="text-sm font-bold text-[#1B4332] tracking-wide mt-0.5">{user.fullName}</h4>
                     </div>
-                    <div className="text-xs font-bold text-[#52796F] font-mono">SAVINGS</div>
+                    <div className="text-xs font-bold text-[#228B22] font-mono">{account?.status || 'ACTIVE'}</div>
                   </div>
 
                   <div className="my-4">
-                    <span className="text-[9px] text-[#52796F] font-mono tracking-wider">ACCUMULATED CAPITAL</span>
-                    <h3 className="text-3xl font-extrabold text-[#1B4332] tracking-tight mt-0.5">
-                      {account ? formatCurrency(account.balance * 1.5) : '---'}
+                    <span className="text-[9px] text-[#52796F] font-mono tracking-wider">REGISTERED EMAIL</span>
+                    <h3 className="text-lg font-extrabold text-[#1B4332] tracking-tight mt-1 break-all">
+                      {account?.email || user.email}
                     </h3>
                   </div>
 
                   <div className="flex justify-between items-end border-t border-[#E5E7EB] pt-3">
                     <div>
                       <span className="text-[8px] text-[#52796F] font-mono">ACCOUNT CODE</span>
-                      <p className="text-xs text-[#0F2818] font-mono tracking-wider mt-0.5">{user.accountNumber.replace('ACC', 'SAV')}</p>
+                      <p className="text-xs text-[#0F2818] font-mono tracking-wider mt-0.5">{user.accountNumber}</p>
                     </div>
                     <div className="text-right">
-                      <span className="text-[8px] text-[#52796F] font-mono">INTEREST RATE</span>
-                      <p className="text-xs text-[#228B22] font-semibold mt-0.5">6.8% p.a.</p>
+                      <span className="text-[8px] text-[#52796F] font-mono">CURRENCY</span>
+                      <p className="text-xs text-[#228B22] font-semibold mt-0.5">{account?.currency || 'VND'}</p>
                     </div>
                   </div>
                 </div>
@@ -178,13 +194,10 @@ export default function Dashboard() {
               <div className="glass-panel rounded-3xl p-6 border border-[#E5E7EB] bg-white shadow-sm relative">
                 <div className="flex justify-between items-center mb-6">
                   <div>
-                    <span className="text-2xl font-extrabold text-[#1B4332]">4,850,000đ</span>
-                    <span className="text-[10px] text-[#228B22] font-mono ml-2 font-bold">+12% vs last month</span>
+                    <span className="text-2xl font-extrabold text-[#1B4332]">{formatCurrency(weeklySpending)}</span>
+                    <span className="text-[10px] text-[#52796F] font-mono ml-2 font-bold">outgoing · last 7 days</span>
                   </div>
-                  <div className="flex gap-1.5 bg-[#FAFAF5] p-1 border border-[#E5E7EB] rounded-lg text-[9px] font-bold text-[#52796F]">
-                    <span className="px-2 py-0.5 bg-white text-[#1B4332] border border-[#E5E7EB] rounded">Weekly</span>
-                    <span className="px-2 py-0.5 rounded hover:text-[#1B4332] cursor-pointer">Monthly</span>
-                  </div>
+                  <span className="px-2 py-1 bg-[#FAFAF5] text-[#1B4332] border border-[#E5E7EB] rounded text-[9px] font-bold">LIVE API DATA</span>
                 </div>
 
                 {/* SVG Curve Design */}
@@ -210,25 +223,15 @@ export default function Dashboard() {
                       fill="none"
                       stroke="#228B22"
                       strokeWidth="2"
-                      points={points}
+                      points={chartPoints}
                       strokeLinecap="round"
                     />
 
-                    {/* Glowing dots */}
-                    <circle cx="20" cy="90" r="3" fill="#1B4332"/>
-                    <circle cx="200" cy="40" r="3" fill="#1B4332"/>
-                    <circle cx="380" cy="50" r="3" fill="#1B4332"/>
                   </svg>
                 </div>
 
                 <div className="flex justify-between items-center text-[9px] font-mono text-[#52796F] mt-2">
-                  <span>MON</span>
-                  <span>TUE</span>
-                  <span>WED</span>
-                  <span>THU</span>
-                  <span>FRI</span>
-                  <span>SAT</span>
-                  <span>SUN</span>
+                  {dayLabels.map((label, index) => <span key={`${label}-${index}`}>{label}</span>)}
                 </div>
               </div>
             </div>

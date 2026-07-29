@@ -24,11 +24,6 @@ export default function Navbar({ title }: NavbarProps) {
           TrueTrace Dashboard
         </a>
 
-        {/* Status indicator */}
-        <div className="flex items-center gap-2 text-xs text-[#52796F] bg-[#FAFAF5] px-3 py-1.5 rounded-lg border border-[#E5E7EB]">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#4CAF50]"></span>
-          <span>API Connected</span>
-        </div>
       </div>
     </header>
   );

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import useSWR from 'swr';
 import Sidebar from '@/components/Sidebar';
 import Navbar from '@/components/Navbar';
-import { getAccountDetails } from '@/api/accounts';
+import { getAccountDetails, getAccountRecipients } from '@/api/accounts';
 import { transferMoney } from '@/api/transactions';
 
 import { tokenStorage } from '@/api/tokenStorage';
@@ -44,6 +44,11 @@ export default function TransferPage() {
     user ? `account-${user.accountNumber}` : null,
     () => getAccountDetails(user.accountNumber)
   );
+  const {
+    data: recipients = [],
+    error: recipientsError,
+    isLoading: recipientsLoading,
+  } = useSWR(user ? 'account-recipients' : null, getAccountRecipients);
 
   if (!user) return null;
 
@@ -59,7 +64,7 @@ export default function TransferPage() {
     // 1. Account format validation
     const accRegex = /^ACC-\d{6}$/;
     if (!accRegex.test(targetTrimmed)) {
-      setError('Recipient account number must be in ACC-XXXXXX format (e.g., ACC-123456).');
+      setError('Recipient account number must use the ACC-XXXXXX format.');
       setLoading(false);
       return;
     }
@@ -114,9 +119,6 @@ export default function TransferPage() {
     }
   };
 
-  const fillAlice = () => setTargetAccount('ACC-123456');
-  const fillBob = () => setTargetAccount('ACC-987654');
-
   return (
     <div className="flex min-h-screen bg-[#FAFAF5] text-black font-sans">
       <Sidebar />
@@ -157,8 +159,8 @@ export default function TransferPage() {
                     type="text"
                     required
                     value={sourceAccount}
-                    onChange={(e) => setSourceAccount(e.target.value)}
-                    className="w-full bg-[#FAFAF5] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-xs text-black focus:outline-none focus:border-[#1B4332] font-mono"
+                    readOnly
+                    className="w-full bg-slate-100 border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-xs text-slate-600 font-mono"
                     placeholder="Source account number"
                   />
                 </div>
@@ -166,35 +168,30 @@ export default function TransferPage() {
                 {/* Target account input */}
                 <div>
                   <label className="block text-[10px] font-bold text-[#52796F] uppercase tracking-wider mb-2">Recipient Account</label>
-                  <div className="flex gap-2">
+                  <div className="space-y-2">
                     <input
                       type="text"
                       required
                       value={targetAccount}
                       onChange={(e) => setTargetAccount(e.target.value)}
-                      className="flex-1 bg-[#FAFAF5] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-xs text-black placeholder-slate-400 focus:outline-none focus:border-[#1B4332] font-mono"
-                      placeholder="Enter recipient account number"
+                      list="recipient-accounts"
+                      className="w-full bg-[#FAFAF5] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-xs text-black placeholder-slate-400 focus:outline-none focus:border-[#1B4332] font-mono"
+                      placeholder="Choose or enter a recipient account"
                     />
-                    
-                    {user.accountNumber !== 'ACC-123456' && (
-                      <button 
-                        type="button" 
-                        onClick={fillAlice}
-                        className="px-3 py-1 bg-[#FAFAF5] hover:bg-[#F5F5E8] border border-[#E5E7EB] text-[10px] text-[#1B4332] font-mono rounded-lg transition-all"
-                      >
-                        Alice
-                      </button>
-                    )}
-                    
-                    {user.accountNumber !== 'ACC-987654' && (
-                      <button 
-                        type="button" 
-                        onClick={fillBob}
-                        className="px-3 py-1 bg-[#FAFAF5] hover:bg-[#F5F5E8] border border-[#E5E7EB] text-[10px] text-[#1B4332] font-mono rounded-lg transition-all"
-                      >
-                        Bob
-                      </button>
-                    )}
+                    <datalist id="recipient-accounts">
+                      {recipients.map((recipient) => (
+                        <option key={recipient.accountNumber} value={recipient.accountNumber}>
+                          {recipient.fullName}
+                        </option>
+                      ))}
+                    </datalist>
+                    <p className="text-[10px] text-[#52796F]">
+                      {recipientsLoading
+                        ? 'Loading eligible recipients…'
+                        : recipientsError
+                          ? 'Recipient directory is unavailable; a valid account can still be entered.'
+                          : `${recipients.length} eligible recipient${recipients.length === 1 ? '' : 's'} loaded from the banking API.`}
+                    </p>
                   </div>
                 </div>
 
@@ -202,13 +199,23 @@ export default function TransferPage() {
                 <div>
                   <label className="block text-[10px] font-bold text-[#52796F] uppercase tracking-wider mb-2">Transfer Amount (VND)</label>
                   <input
-                    type="text"
+                    type="number"
+                    min="0.01"
+                    step="0.01"
                     required
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
                     className="w-full bg-[#FAFAF5] border border-[#E5E7EB] rounded-xl px-4 py-2.5 text-xs text-black placeholder-slate-400 focus:outline-none focus:border-[#1B4332] font-mono"
                     placeholder="Enter transfer amount"
                   />
+                </div>
+
+                <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-[11px] leading-relaxed text-amber-900">
+                  <strong className="block mb-1">Prepared AML demo pattern</strong>
+                  Using a funded demo account, make two separate transfers to different API-listed recipients,
+                  each just below the configured structuring threshold and within the configured detection
+                  window. The amount, threshold, and recipients must come from the running environment—never
+                  from fixed account IDs.
                 </div>
 
                 {/* Description input */}

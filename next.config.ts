@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: 'standalone',
   poweredByHeader: false,
+  skipTrailingSlashRedirect: true,
   async headers() {
     return [
       {
@@ -46,6 +47,10 @@ const nextConfig: NextConfig = {
     const dashboardFrontendUrl = process.env.DASHBOARD_FRONTEND_URL || 'http://localhost:3001';
 
     return [
+      {
+        source: '/soc',
+        destination: `${dashboardFrontendUrl}/soc/index.html`,
+      },
       {
         source: '/soc/:path*',
         destination: `${dashboardFrontendUrl}/soc/:path*`,

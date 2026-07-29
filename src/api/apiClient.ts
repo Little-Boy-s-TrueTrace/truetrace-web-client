@@ -14,7 +14,6 @@ const clearAuthState = () => {
 const handleApiError = (error: any) => {
   if (typeof window !== 'undefined') {
     console.error('API Error:', error);
-    alert('An error occurred while communicating with the server.');
   }
 };
 

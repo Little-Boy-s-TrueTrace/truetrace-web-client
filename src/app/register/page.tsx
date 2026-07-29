@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { register } from '@/api/auth';
+import { login, register } from '@/api/auth';
+import { tokenStorage } from '@/api/tokenStorage';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -23,10 +24,17 @@ export default function RegisterPage() {
 
     try {
       const response = await register({ username, password, fullName, email });
-      setSuccess(`Account registered successfully: ${response.accountNumber}. Redirecting to sign in...`);
-      setTimeout(() => {
-        router.push('/login');
-      }, 2000);
+      setSuccess(`Account ${response.accountNumber} was created. Signing you in for KYC…`);
+      try {
+        const auth = await login({ username, password });
+        tokenStorage.setItem('token', auth.token);
+        tokenStorage.setItem('user', JSON.stringify(auth.user));
+        setSuccess(`Account ${response.accountNumber} is ready. Opening identity verification…`);
+        setTimeout(() => router.push('/kyc'), 800);
+      } catch {
+        setSuccess(`Account ${response.accountNumber} was created. Please sign in to continue KYC.`);
+        setTimeout(() => router.push('/login'), 1600);
+      }
     } catch (err: any) {
       if (err.response) {
         setError(err.response.data.error || 'Registration failed. Please try again.');
@@ -47,7 +55,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md glass-panel rounded-3xl p-8 border border-[#E5E7EB] shadow-sm relative z-10 hover:border-[#1B4332]/20 bg-white">
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#1B4332] to-[#84A98C] flex items-center justify-center font-black text-white text-2xl shadow-xl shadow-[#1B4332]/10 mx-auto mb-4">
-            A
+            T
           </div>
           <h2 className="text-2xl font-extrabold text-[#1B4332] tracking-tight font-heading">Open Account</h2>
           <p className="text-xs text-[#52796F] font-mono tracking-widest mt-1 uppercase font-semibold">TrueTrace Bank Registration</p>

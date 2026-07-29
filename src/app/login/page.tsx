@@ -67,7 +67,7 @@ export default function LoginPage() {
         {/* Top Header */}
         <div className="flex items-center gap-3 relative z-10">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#0F2818] to-[#84A98C] flex items-center justify-center font-black text-white text-xl shadow-lg shadow-[#0F2818]/25">
-            A
+            T
           </div>
           <div>
             <h1 className="font-extrabold text-white tracking-wide text-base">TrueTrace Bank</h1>
@@ -76,19 +76,20 @@ export default function LoginPage() {
         </div>
 
         {/* Center graphics/slogan */}
-        <div className="my-auto space-y-6 relative z-10 max-w-lg">
-          <h2 className="text-4xl font-extrabold text-white tracking-tight leading-tight font-heading">
-            Environmental <br />
-            <span className="text-[#FFB300]">Sustainability Finance</span>
-          </h2>
-          <p className="text-[#FAFAF5]/85 text-sm leading-relaxed">
-            Co-creating a greener future through eco-friendly asset management, climate-positive carbon offsets, and organic, sustainable financial choices.
-          </p>
+          <div className="my-auto space-y-6 relative z-10 max-w-lg">
+            <h2 className="text-4xl font-extrabold text-white tracking-tight leading-tight font-heading">
+              Safer onboarding. <br />
+              <span className="text-[#FFB300]">Traceable transactions.</span>
+            </h2>
+            <p className="text-[#FAFAF5]/85 text-sm leading-relaxed">
+              TrueTrace connects deepfake-aware KYC, real-time AML monitoring, and human-reviewed
+              suspicious transaction reporting in one auditable banking workflow.
+            </p>
         </div>
 
         {/* Footer */}
         <div className="text-[10px] text-[#FAFAF5]/50 font-mono relative z-10">
-          <span>© 2026 TRUETRACE BANK - SUSTAINABLE CO-OP</span>
+          <span>© 2026 TRUETRACE BANK — AI COMPLIANCE WORKFLOW</span>
         </div>
       </div>
 
