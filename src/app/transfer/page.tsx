@@ -98,17 +98,11 @@ export default function TransferPage() {
         description: cleanDescription,
       });
 
-      setSuccess(`Transfer completed. Reference ID: ${result.transactionId}. Logging out securely for transaction safety...`);
+      setSuccess(`Transfer completed successfully! Reference ID: ${result.transactionId}`);
       setTargetAccount('');
       setAmount('');
       setDescription('');
-      
-      // Clear token and user cookies/storage, then redirect to login page after a brief delay
-      setTimeout(() => {
-        tokenStorage.removeItem('token');
-        tokenStorage.removeItem('user');
-        router.replace('/login');
-      }, 3000);
+      mutateAccount(); // Refresh the account balance
     } catch (err: any) {
       if (err.response) {
         setError(err.response.data.error || 'Transfer declined by the banking server.');
