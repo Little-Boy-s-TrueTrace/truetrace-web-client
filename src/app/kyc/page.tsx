@@ -27,6 +27,7 @@ export default function KycPage() {
   const [session, setSession] = useState<KycSession | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingSession, setLoadingSession] = useState(true);
+  const [isReverifying, setIsReverifying] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const activeSessionId = session?.sessionId;
@@ -92,6 +93,7 @@ export default function KycPage() {
     try {
       const created = await createKycSession(formData);
       setSession(created);
+      setIsReverifying(false);
       setSuccess(`KYC session ${created.sessionId} was saved and queued for Agent 1.`);
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to submit KYC evidence.');
@@ -163,7 +165,7 @@ export default function KycPage() {
               </div>
             )}
 
-            {session && isTerminalKycStatus(session.status) ? (
+            {session && isTerminalKycStatus(session.status) && !isReverifying ? (
               <div className="text-center py-8">
                 {session.status === 'APPROVED' ? (
                   <>
@@ -173,7 +175,13 @@ export default function KycPage() {
                       </svg>
                     </div>
                     <h3 className="text-lg font-bold text-emerald-800 mb-2">Identity Verified</h3>
-                    <p className="text-sm text-gray-600">Your KYC verification has been approved. No further action is required.</p>
+                    <p className="text-sm text-gray-600 mb-4">Your KYC verification has been approved. No further action is required.</p>
+                    <button
+                      onClick={() => { setIsReverifying(true); setError(''); setSuccess(''); }}
+                      className="px-6 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-semibold rounded-lg transition-colors border border-gray-300"
+                    >
+                      Submit New Test (Demo)
+                    </button>
                   </>
                 ) : (
                   <>
@@ -185,7 +193,7 @@ export default function KycPage() {
                     <h3 className="text-lg font-bold text-red-800 mb-2">Verification Rejected</h3>
                     <p className="text-sm text-gray-600 mb-4">Your identity verification was not approved. Please re-submit with valid documents.</p>
                     <button
-                      onClick={() => { setSession(null); setError(''); setSuccess(''); }}
+                      onClick={() => { setIsReverifying(true); setError(''); setSuccess(''); }}
                       className="px-6 py-2 bg-[#1B4332] text-white rounded-lg font-bold hover:bg-[#228B22] transition-colors"
                     >
                       Re-submit Verification
