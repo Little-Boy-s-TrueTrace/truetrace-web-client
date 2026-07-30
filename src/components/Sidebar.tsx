@@ -98,7 +98,7 @@ export default function Sidebar() {
 
             {/* TrueTrace Dashboard Quick Link */}
             <a 
-              href="/soc" 
+              href="/monitor" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="w-full text-center py-2 bg-emerald-50 hover:bg-emerald-100/50 border border-emerald-100 text-[10px] text-[#228B22] font-bold rounded-lg block transition-all uppercase tracking-wider"

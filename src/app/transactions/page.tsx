@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar';
 import { getTransactionHistory, TransactionItem } from '@/api/transactions';
 
 import { tokenStorage } from '@/api/tokenStorage';
+import { formatApiTimestamp } from '@/utils/dateTime';
 
 export default function TransactionsPage() {
   const router = useRouter();
@@ -136,7 +137,7 @@ export default function TransactionsPage() {
                       return (
                         <tr key={tx.id} className="hover:bg-[#FAFAF5]/80 transition-colors">
                           <td className="py-4 px-4 font-mono text-[#52796F]">#{tx.id}</td>
-                          <td className="py-4 px-4 text-slate-500">{new Date(tx.timestamp).toLocaleString()}</td>
+                          <td className="py-4 px-4 text-slate-500">{formatApiTimestamp(tx.timestamp)}</td>
                           <td className="py-4 px-4">
                             <span className={`px-2 py-0.5 rounded font-mono text-[8px] font-bold ${
                               isSender 

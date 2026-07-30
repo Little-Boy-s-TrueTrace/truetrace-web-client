@@ -31,6 +31,15 @@ describe('customer KYC demo helpers', () => {
     expect(selected?.sessionId).toBe('session-2');
   });
 
+  test('keeps the newest database row above a legacy row with a future timestamp', () => {
+    const selected = newestKycSession([
+      session('session-1', '2026-07-30T07:07:28Z'),
+      session('session-2', '2026-07-30T00:29:30Z'),
+    ]);
+
+    expect(selected?.sessionId).toBe('session-2');
+  });
+
   test('recognizes statuses where automated polling has reached a review outcome', () => {
     expect(isTerminalKycStatus('APPROVED')).toBe(true);
     expect(isTerminalKycStatus('REJECTED')).toBe(true);

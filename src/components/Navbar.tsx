@@ -16,7 +16,7 @@ export default function Navbar({ title }: NavbarProps) {
       <div className="flex items-center gap-6">
         {/* External Security SOC Dashboard Link */}
         <a 
-          href="/soc" 
+          href="/monitor" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="text-xs text-[#228B22] hover:underline font-bold bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-100 transition-all hover:bg-emerald-100/50"

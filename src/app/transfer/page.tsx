@@ -42,7 +42,8 @@ export default function TransferPage() {
   // Fetch account details to display current balance
   const { data: account, mutate: mutateAccount } = useSWR(
     user ? `account-${user.accountNumber}` : null,
-    () => getAccountDetails(user.accountNumber)
+    () => getAccountDetails(user.accountNumber),
+    { refreshInterval: 3000 }
   );
   const {
     data: recipients = [],
@@ -260,7 +261,13 @@ export default function TransferPage() {
 
                 <div className="flex justify-between items-center text-[9px] text-[#FAFAF5]/70 font-mono">
                   <span>ID: {user.accountNumber}</span>
-                  <span className="text-[#52B788] font-bold">ACTIVE</span>
+                  <span
+                    className={`font-bold ${
+                      account?.status === 'FROZEN' ? 'text-rose-300' : 'text-[#52B788]'
+                    }`}
+                  >
+                    {account?.status || 'LOADING'}
+                  </span>
                 </div>
               </div>
             </div>

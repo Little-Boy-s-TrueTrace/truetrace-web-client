@@ -10,6 +10,7 @@ import { getTransactionHistory } from '@/api/transactions';
 import Link from 'next/link';
 
 import { tokenStorage } from '@/api/tokenStorage';
+import { apiDate } from '@/utils/dateTime';
 
 export default function Dashboard() {
   const router = useRouter();
@@ -30,7 +31,8 @@ export default function Dashboard() {
   // Fetch account details dynamically using SWR
   const { data: account } = useSWR(
     user ? `account-${user.accountNumber}` : null,
-    () => getAccountDetails(user.accountNumber)
+    () => getAccountDetails(user.accountNumber),
+    { refreshInterval: 3000 }
   );
 
   // Fetch transaction history
@@ -49,7 +51,7 @@ export default function Dashboard() {
   const spendingByDay = new Array(7).fill(0) as number[];
   (txHistory || []).forEach((tx) => {
     if (tx.sourceAccountNumber !== user.accountNumber) return;
-    const txDate = new Date(tx.timestamp);
+    const txDate = apiDate(tx.timestamp);
     const age = Math.floor((now.getTime() - txDate.getTime()) / 86_400_000);
     if (age >= 0 && age < 7) spendingByDay[6 - age] += tx.amount;
   });
@@ -129,7 +131,13 @@ export default function Dashboard() {
                       <p className="text-[9px] text-[#52796F] font-mono tracking-widest uppercase font-bold">Account Profile</p>
                       <h4 className="text-sm font-bold text-[#1B4332] tracking-wide mt-0.5">{user.fullName}</h4>
                     </div>
-                    <div className="text-xs font-bold text-[#228B22] font-mono">{account?.status || 'ACTIVE'}</div>
+                    <div
+                      className={`text-xs font-bold font-mono ${
+                        account?.status === 'FROZEN' ? 'text-rose-600' : 'text-[#228B22]'
+                      }`}
+                    >
+                      {account?.status || 'LOADING'}
+                    </div>
                   </div>
 
                   <div className="my-4">
