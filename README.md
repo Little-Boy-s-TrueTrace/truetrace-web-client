@@ -164,7 +164,7 @@ jest.config.js           # Jest configuration
 ## Related Repositories
 
 - [`truetrace-backend`](https://github.com/Little-Boy-s-TrueTrace/truetrace-backend) — bank API
-- [`dashboard`](https://github.com/Little-Boy-s-TrueTrace/dashboard) — Compliance application
+- [`truetrace-dashboard`](https://github.com/Little-Boy-s-TrueTrace/truetrace-dashboard) — Compliance dashboard
 - [`truetrace-deployment`](https://github.com/Little-Boy-s-TrueTrace/truetrace-deployment) — full local stack
 
 <!-- CI/CD Sync Trigger -->
